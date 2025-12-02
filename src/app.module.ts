@@ -10,6 +10,10 @@ import authConfig from './config/auth.config';
 import redisConfig from './config/redis.config';
 import queueConfig from './config/queue.config';
 import { AuthModule } from './modules/auth/auth.module';
+import { CompaniesModule } from './modules/companies/companies.module';
+import { FiscalYearsModule } from './modules/fiscal-years/fiscal-years.module';
+import { AccountsModule } from './modules/accounts/accounts.module';
+import { VouchersModule } from './modules/vouchers/vouchers.module';
 import { dataSourceOptions } from '../typeorm.config';
 
 @Module({
@@ -26,6 +30,10 @@ import { dataSourceOptions } from '../typeorm.config';
       },
     ]),
     AuthModule,
+    CompaniesModule,
+    FiscalYearsModule,
+    AccountsModule,
+    VouchersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
