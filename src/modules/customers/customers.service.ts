@@ -15,7 +15,7 @@ export class CustomersService {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
-  ) {}
+  ) { }
 
   async create(
     createCustomerDto: CreateCustomerDto,
@@ -44,6 +44,11 @@ export class CustomersService {
     search?: string,
     isActive?: boolean,
   ): Promise<Customer[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     const query = this.customerRepository
       .createQueryBuilder('customer')
       .where('customer.company_id = :companyId', { companyId });
@@ -120,6 +125,11 @@ export class CustomersService {
   }
 
   async getCustomersWithBalance(companyId: string): Promise<Customer[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     return this.customerRepository
       .createQueryBuilder('customer')
       .where('customer.company_id = :companyId', { companyId })

@@ -109,6 +109,11 @@ export class JournalEntriesService {
     }
 
     async findAll(companyId: string): Promise<JournalEntry[]> {
+        // Return empty array if no company is assigned
+        if (!companyId) {
+            return [];
+        }
+
         return this.journalEntryRepository.find({
             where: { companyId },
             relations: ['lines', 'voucherType'],

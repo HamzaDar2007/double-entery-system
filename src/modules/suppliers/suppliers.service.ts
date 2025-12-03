@@ -15,7 +15,7 @@ export class SuppliersService {
   constructor(
     @InjectRepository(Supplier)
     private readonly supplierRepository: Repository<Supplier>,
-  ) {}
+  ) { }
 
   async create(
     createSupplierDto: CreateSupplierDto,
@@ -43,6 +43,11 @@ export class SuppliersService {
     search?: string,
     isActive?: boolean,
   ): Promise<Supplier[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     const query = this.supplierRepository
       .createQueryBuilder('supplier')
       .where('supplier.company_id = :companyId', { companyId });
@@ -115,6 +120,11 @@ export class SuppliersService {
   }
 
   async getSuppliersWithBalance(companyId: string): Promise<Supplier[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     return this.supplierRepository
       .createQueryBuilder('supplier')
       .where('supplier.company_id = :companyId', { companyId })
