@@ -150,6 +150,10 @@ export class InvoicesService {
   }
 
   async findOne(id: string, companyId: string): Promise<Invoice> {
+    if (!companyId) {
+      throw new NotFoundException(`Invoice with ID ${id} not found`);
+    }
+
     const invoice = await this.invoiceRepository.findOne({
       where: { id, companyId },
       relations: ['customer', 'supplier', 'lines', 'lines.item', 'lines.taxCategory'],
