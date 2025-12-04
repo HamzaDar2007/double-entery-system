@@ -8,20 +8,33 @@ export class BudgetsService {
   constructor(
     @InjectRepository(Budget)
     private budgetsRepository: Repository<Budget>,
-  ) {}
+  ) { }
 
-  async create(budgetData: Partial<Budget>): Promise<Budget> {
-    const budget = this.budgetsRepository.create(budgetData);
+  async create(budgetData: Partial<Budget>, companyId: string): Promise<Budget> {
+    const budget = this.budgetsRepository.create({
+      ...budgetData,
+      companyId,
+    });
     return this.budgetsRepository.save(budget);
   }
 
-  async findAll(): Promise<Budget[]> {
-    return this.budgetsRepository.find();
+  async findAll(companyId: string): Promise<Budget[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+    return this.budgetsRepository.find({
+      where: { companyId },
+    });
   }
 
-  async findByAccount(accountId: string, fiscalYearId: string): Promise<Budget[]> {
+  async findByAccount(accountId: string, fiscalYearId: string, companyId: string): Promise<Budget[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
     return this.budgetsRepository.find({
-      where: { accountId, fiscalYearId },
+      where: { accountId, fiscalYearId, companyId },
     });
   }
 }

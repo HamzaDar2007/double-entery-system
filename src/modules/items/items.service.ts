@@ -14,7 +14,7 @@ export class ItemsService {
   constructor(
     @InjectRepository(Item)
     private readonly itemRepository: Repository<Item>,
-  ) {}
+  ) { }
 
   async create(createItemDto: CreateItemDto, companyId: string): Promise<Item> {
     // Check if item code already exists
@@ -44,6 +44,11 @@ export class ItemsService {
     category?: string,
     isActive?: boolean,
   ): Promise<Item[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     const query = this.itemRepository
       .createQueryBuilder('item')
       .leftJoinAndSelect('item.salesTaxCategory', 'salesTaxCategory')
@@ -141,7 +146,7 @@ export class ItemsService {
     companyId: string,
   ): Promise<Item> {
     const item = await this.findOne(id, companyId);
-    
+
     if (!item.isInventoryItem) {
       throw new ConflictException('Item is not an inventory item');
     }
@@ -158,6 +163,11 @@ export class ItemsService {
   }
 
   async getLowStockItems(companyId: string): Promise<Item[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     return this.itemRepository
       .createQueryBuilder('item')
       .where('item.company_id = :companyId', { companyId })

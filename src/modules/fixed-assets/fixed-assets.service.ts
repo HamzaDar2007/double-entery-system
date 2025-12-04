@@ -11,15 +11,24 @@ export class FixedAssetsService {
     private fixedAssetsRepository: Repository<FixedAsset>,
     @InjectRepository(DepreciationSchedule)
     private depreciationScheduleRepository: Repository<DepreciationSchedule>,
-  ) {}
+  ) { }
 
-  async create(assetData: Partial<FixedAsset>): Promise<FixedAsset> {
-    const asset = this.fixedAssetsRepository.create(assetData);
+  async create(assetData: Partial<FixedAsset>, companyId: string): Promise<FixedAsset> {
+    const asset = this.fixedAssetsRepository.create({
+      ...assetData,
+      companyId,
+    });
     return this.fixedAssetsRepository.save(asset);
   }
 
-  async findAll(): Promise<FixedAsset[]> {
-    return this.fixedAssetsRepository.find();
+  async findAll(companyId: string): Promise<FixedAsset[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+    return this.fixedAssetsRepository.find({
+      where: { companyId },
+    });
   }
 
   async calculateDepreciation(assetId: string) {

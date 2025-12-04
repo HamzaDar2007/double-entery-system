@@ -15,7 +15,7 @@ export class ProjectsService {
   constructor(
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
-  ) {}
+  ) { }
 
   async create(
     createProjectDto: CreateProjectDto,
@@ -46,6 +46,11 @@ export class ProjectsService {
     status?: ProjectStatus,
     isActive?: boolean,
   ): Promise<Project[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     const query = this.projectRepository
       .createQueryBuilder('project')
       .leftJoinAndSelect('project.customer', 'customer')
@@ -135,12 +140,12 @@ export class ProjectsService {
 
   async getProjectVariance(id: string, companyId: string) {
     const project = await this.findOne(id, companyId);
-    
+
     const budgetAmount = new Decimal(project.budgetAmount);
     const actualCost = new Decimal(project.actualCost);
     const costVariance = budgetAmount.minus(actualCost);
-    const costVariancePercentage = budgetAmount.isZero() 
-      ? new Decimal(0) 
+    const costVariancePercentage = budgetAmount.isZero()
+      ? new Decimal(0)
       : costVariance.dividedBy(budgetAmount).times(100);
 
     const estimatedRevenue = new Decimal(project.estimatedRevenue);

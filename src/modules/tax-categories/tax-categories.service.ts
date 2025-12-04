@@ -14,7 +14,7 @@ export class TaxCategoriesService {
   constructor(
     @InjectRepository(TaxCategory)
     private readonly taxCategoryRepository: Repository<TaxCategory>,
-  ) {}
+  ) { }
 
   async create(
     createTaxCategoryDto: CreateTaxCategoryDto,
@@ -42,6 +42,10 @@ export class TaxCategoriesService {
     type?: TaxType,
     isActive?: boolean,
   ): Promise<TaxCategory[]> {
+    if (!companyId) {
+      return [];
+    }
+
     const query = this.taxCategoryRepository
       .createQueryBuilder('tax_category')
       .where('tax_category.company_id = :companyId', { companyId });

@@ -22,7 +22,7 @@ export class InvoicesService {
     private readonly invoiceRepository: Repository<Invoice>,
     @InjectRepository(InvoiceLine)
     private readonly invoiceLineRepository: Repository<InvoiceLine>,
-  ) {}
+  ) { }
 
   async create(
     createInvoiceDto: CreateInvoiceDto,
@@ -81,6 +81,11 @@ export class InvoicesService {
     filterDto: InvoiceFilterDto,
     companyId: string,
   ): Promise<{ data: Invoice[]; total: number }> {
+    // Return empty result if no company is assigned
+    if (!companyId) {
+      return { data: [], total: 0 };
+    }
+
     const query = this.invoiceRepository
       .createQueryBuilder('invoice')
       .leftJoinAndSelect('invoice.customer', 'customer')
@@ -174,7 +179,7 @@ export class InvoicesService {
     // If lines are being updated, recalculate totals
     if (updateInvoiceDto.lines) {
       const calculations = this.calculateInvoiceTotals(updateInvoiceDto.lines);
-      
+
       Object.assign(invoice, {
         ...updateInvoiceDto,
         subtotal: calculations.subtotal.toString(),
@@ -188,7 +193,7 @@ export class InvoicesService {
 
       // Delete old lines and create new ones
       await this.invoiceLineRepository.delete({ invoiceId: id });
-      
+
       const lines = updateInvoiceDto.lines.map((lineDto, index) => {
         const lineCalc = this.calculateLineTotals(lineDto);
         return this.invoiceLineRepository.create({
@@ -294,7 +299,7 @@ export class InvoicesService {
     }
 
     const afterDiscount = lineTotal.minus(discountAmount);
-    
+
     // Tax will be calculated from tax category in real implementation
     const taxAmount = new Decimal(0);
     const netAmount = afterDiscount.plus(taxAmount);

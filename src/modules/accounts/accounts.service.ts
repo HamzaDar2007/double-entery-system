@@ -81,6 +81,11 @@ export class AccountsService {
     }
 
     async findAll(companyId: string): Promise<Account[]> {
+        // Return empty array if no company is assigned
+        if (!companyId) {
+            return [];
+        }
+
         return this.accountRepository.find({
             where: { companyId },
             order: { code: 'ASC' },

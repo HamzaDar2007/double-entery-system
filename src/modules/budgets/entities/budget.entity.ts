@@ -27,4 +27,7 @@ export class Budget extends BaseEntity {
 
   @Column({ nullable: true })
   description: string;
+
+  @Column({ name: 'company_id' })
+  companyId: string;
 }

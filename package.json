@@ -24,7 +24,8 @@
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
     "migration:show": "npm run typeorm -- migration:show",
-    "seed:run": "ts-node -r tsconfig-paths/register src/database/seeds/run-seeds.ts"
+    "seed:run": "ts-node -r tsconfig-paths/register src/database/seeds/run-seeds.ts",
+    "test:api": "ts-node -r tsconfig-paths/register src/scripts/test-api.ts"
   },
   "dependencies": {
     "@nestjs/bull": "^11.0.4",

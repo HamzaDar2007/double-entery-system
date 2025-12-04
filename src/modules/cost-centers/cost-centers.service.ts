@@ -14,7 +14,7 @@ export class CostCentersService {
   constructor(
     @InjectRepository(CostCenter)
     private readonly costCenterRepository: TreeRepository<CostCenter>,
-  ) {}
+  ) { }
 
   async create(
     createCostCenterDto: CreateCostCenterDto,
@@ -45,6 +45,11 @@ export class CostCentersService {
   }
 
   async findAll(companyId: string, isActive?: boolean): Promise<CostCenter[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     const query = this.costCenterRepository
       .createQueryBuilder('cost_center')
       .where('cost_center.company_id = :companyId', { companyId });
@@ -57,6 +62,11 @@ export class CostCentersService {
   }
 
   async findTree(companyId: string): Promise<CostCenter[]> {
+    // Return empty array if no company is assigned
+    if (!companyId) {
+      return [];
+    }
+
     const roots = await this.costCenterRepository.find({
       where: { companyId, parent: null as any },
     });

@@ -26,4 +26,7 @@ export class FixedAsset extends BaseEntity {
 
   @Column({ default: 'ACTIVE' })
   status: string;
+
+  @Column({ name: 'company_id' })
+  companyId: string;
 }

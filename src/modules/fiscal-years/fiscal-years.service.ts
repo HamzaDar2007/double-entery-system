@@ -40,6 +40,10 @@ export class FiscalYearsService {
     }
 
     async findAll(companyId: string): Promise<FiscalYear[]> {
+        if (!companyId) {
+            return [];
+        }
+
         return this.fiscalYearRepository.find({
             where: { companyId },
             order: { startDate: 'DESC' },

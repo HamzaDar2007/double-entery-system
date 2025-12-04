@@ -77,9 +77,9 @@ export async function seedVoucherTypes(
     let skipped = 0;
 
     for (const vt of voucherTypes) {
-        // Check if exists using raw query
+        // Check if exists using raw query  
         const existing = await dataSource.query(
-            `SELECT id FROM voucher_types WHERE company_id = $1 AND code = $2 AND deleted_at IS NULL LIMIT 1`,
+            `SELECT id FROM voucher_types WHERE company_id = $1 AND code = $2 LIMIT 1`,
             [companyId, vt.code],
         );
 
