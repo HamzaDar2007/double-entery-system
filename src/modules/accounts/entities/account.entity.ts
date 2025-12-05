@@ -66,6 +66,15 @@ export class Account extends BaseEntity {
     @Column({ name: 'opening_balance_type', nullable: true })
     openingBalanceType: 'debit' | 'credit';
 
+    @Column({
+        name: 'current_balance',
+        type: 'numeric',
+        precision: 18,
+        scale: 2,
+        default: 0,
+    })
+    currentBalance: number;
+
     @Column({ name: 'currency_code', length: 3, nullable: true })
     currencyCode: string;
 

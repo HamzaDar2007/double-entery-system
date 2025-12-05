@@ -27,9 +27,34 @@ export class AccountsController {
         return this.accountsService.findAll(companyId);
     }
 
+    @Get('hierarchy')
+    @ApiOperation({ summary: 'Get account hierarchy (L1 → L2 → L3 → L4)' })
+    getHierarchy(@CurrentCompany() companyId: string) {
+        return this.accountsService.getHierarchy(companyId);
+    }
+
+    @Get('posting-accounts')
+    @ApiOperation({ summary: 'Get only posting accounts (L4 accounts for transactions)' })
+    getPostingAccounts(@CurrentCompany() companyId: string) {
+        return this.accountsService.getPostingAccounts(companyId);
+    }
+
+    @Post('rollup-balances')
+    @ApiOperation({ summary: 'Rollup all account balances (L4 → L3 → L2 → L1)' })
+    async rollupBalances(@CurrentCompany() companyId: string) {
+        await this.accountsService.rollupAllBalances(companyId);
+        return { message: 'Balance rollup completed successfully' };
+    }
+
     @Get(':id')
     @ApiOperation({ summary: 'Get an account by ID' })
     findOne(@Param('id') id: string, @CurrentCompany() companyId: string) {
         return this.accountsService.findOne(id, companyId);
+    }
+
+    @Get(':id/with-balance')
+    @ApiOperation({ summary: 'Get account with calculated balance' })
+    getWithBalance(@Param('id') id: string) {
+        return this.accountsService.getAccountWithBalance(id);
     }
 }
